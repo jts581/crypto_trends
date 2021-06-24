@@ -1,17 +1,19 @@
 import os
 from re import search
+from typing import Counter
 from dotenv import load_dotenv
 
 load_dotenv()
 
 ## Requesting API from user, similar to entering login information
 
-from getpass import getpass 
-API_KEY = getpass("API Key: ") 
+#from getpass import getpass 
+#API_KEY = getpass("API Key: ") 
 # Note that entering an API in terminal (at least Git Bash) is difficult
 # ...because user can't see what they're entering.
 # ...see here for details: https://stackoverflow.com/questions/13399315/cant-type-password-in-git-bash
 
+API_KEY = os.getenv("API_KEY")
 print(len(API_KEY))
 
 ## Validating this API key can connect to the client (NYT) 
@@ -29,7 +31,7 @@ pprint([method for method in dir(client) if not method.startswith("_")])
 
 ## Since we're trying to identify trends in a set of cryptocurrencies
 ## ...we'll count mentions in the 'top_stories' articles 
-## ...top_stories can be filtered by section, most_viewed and most_shared can not
+## ...top_stories can be filtered by section, most_viewed and most_shared can't
 ## ...and we'll filter top_stories by the "business" section    
 
 biz_stories = client.top_stories(section="business")
@@ -43,15 +45,19 @@ pprint(story.keys())
 #pprint(story)
 
 ## Return the title, abstract, des_facet, and org_facet
-pprint(story["title"])
-pprint(story["abstract"])
-pprint(story["des_facet"])
-pprint(story["org_facet"])
+#pprint(story["title"])
+#pprint(story["abstract"])
+#pprint(story["des_facet"])
+#pprint(story["org_facet"])
 
-## Return the titles of articles that have the word "crypto" in their
+## Return the titles of articles that have a certain word in their
 ## ...title, abstract, des_facet, or org_facet
-search_phrase = "crypto"
+
+search_phrase = "Federal"
 
 crypto_stories = []
+for item in biz_stories:
+    if search_phrase in (item["abstract"] or item["title"] or item["des_facet"] or item["org_facet"]):
+        crypto_stories.append(item)
 
-    
+print(crypto_stories)
