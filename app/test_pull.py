@@ -53,7 +53,7 @@ pprint(story.keys())
 ## Return the titles of articles that have a certain word in their
 ## ...title, abstract, des_facet, or org_facet
 
-search_phrase = "Federal"
+search_phrase = "banks" #> Just a thought, we could even turn this into a user input
 
 filtered_stories = []
 for item in biz_stories:
