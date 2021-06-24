@@ -53,7 +53,7 @@ pprint(story.keys())
 ## Return the titles of articles that have a certain word in their
 ## ...title, abstract, des_facet, or org_facet
 
-search_phrase = "banks" #> Just a thought, we could even turn this into a user input
+search_phrase = "pandemic" #> Just a thought, we could even turn this into a user input
 
 filtered_stories = []
 for item in biz_stories:
@@ -61,4 +61,6 @@ for item in biz_stories:
         filtered_stories.append(item)
 
 print(len(filtered_stories))
-print(filtered_stories[0]["abstract"])
+
+for s in filtered_stories:
+    print(s["abstract"])
