@@ -1,0 +1,7 @@
+# Python packages required to install
+
+# to get the NYT API Key
+python-dotenv
+
+# to retrieve data from NYT API
+requests
