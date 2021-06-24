@@ -55,9 +55,10 @@ pprint(story.keys())
 
 search_phrase = "Federal"
 
-crypto_stories = []
+filtered_stories = []
 for item in biz_stories:
     if search_phrase in (item["abstract"] or item["title"] or item["des_facet"] or item["org_facet"]):
-        crypto_stories.append(item)
+        filtered_stories.append(item)
 
-print(crypto_stories)
+print(len(filtered_stories))
+print(filtered_stories[0]["abstract"])
