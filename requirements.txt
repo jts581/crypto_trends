@@ -1,0 +1,13 @@
+# This is the requirements file
+
+# DEVELOPMENT/PRODUCTION
+
+python-dotenv
+requests
+pandas
+pynytimes
+sendgrid
+
+# TEST
+pytest
+
