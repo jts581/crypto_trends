@@ -54,3 +54,11 @@ articles = client.article_search(
 print(len(articles))
 print(articles[0]["headline"]["main"])
 print(articles[0]["web_url"])
+
+
+### Notes
+## Output: a ranking of a set of cryptocurrencies
+    ## What does that output look like?
+    ## How to query for multiple terms?
+## Nice to have: Try to allow user to select dates
+## Nice to have: emailed report (sendgrid)
