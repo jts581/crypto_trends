@@ -109,7 +109,9 @@ ada_frq = len(ada_articles)
 df = pd.DataFrame(data={"Cryptocurrencies": ["Ethereum","Bitcoin","Doge","Ripple","Cardano"],
                          "Number of mentions": [eth_frq, BTC_frq, doge_frq, xrp_frq, ada_frq]})
 
-print(df.sort_values(by= ["Number of mentions"], inplace= True, ascending= False)) #> Figure out how to rank this
+df.sort_values(by= ["Number of mentions"], inplace= True, ascending= False)
+print(df)
+
 print("----------------------------------")
 
 print("Number of BTC articles: ",BTC_frq)
