@@ -10,18 +10,18 @@ from pandas.core.frame import DataFrame
 
 load_dotenv()
 
-## Load API from dotenv
+## Load NYT API from dotenv
 
-API_KEY = os.getenv("API_KEY")
+NYT_API_KEY = os.getenv("NYT_API_KEY", default="OOPS, please set env var called 'NYT_API_KEY'")
 
 ## Validate that this API key can connect to the client (NYT) 
 
 from pynytimes import NYTAPI
 
-client = NYTAPI(API_KEY, parse_dates=True)
+client = NYTAPI(NYT_API_KEY, parse_dates=True)
 client
 
-## Creating the cryptotrends report
+## Query the API for the five cryptocurrency search terms
 
 today = datetime.datetime.today()
 week_ago = today - datetime.timedelta(days=7)
@@ -93,26 +93,30 @@ ada_articles = client.article_search(
     }
 )
 
+## Print a table of the five cryptocurrencies, ranked by number of mentions in the last week
+
 print("Cryptocurrency mentions in the NYTimes:",week_ago.strftime("%m/%d/%Y"),"through",today.strftime(("%m/%d/%Y")))
 print("----------------------------------")
 
 BTC_frq = len(btc_articles)
 
-eth_frq = len(eth_articles)
+ada_frq = len(ada_articles)
 
 doge_frq = len(doge_articles)
 
+eth_frq = len(eth_articles)
+
 xrp_frq = len(xrp_articles)
 
-ada_frq = len(ada_articles)
-
 df = pd.DataFrame(data={"Cryptocurrencies": ["Ethereum","Bitcoin","Doge","Ripple","Cardano"],
-                         "Number of mentions": [eth_frq, BTC_frq, doge_frq, xrp_frq, ada_frq]})
+                         "Number of mentions": [BTC_frq,ada_frq,doge_frq,eth_frq,xrp_frq]})
 
 df.sort_values(by= ["Number of mentions"], inplace= True, ascending= False)
 print(df)
 
 print("----------------------------------")
+
+## Print the latest article for each cryptocurrency, if one is available, with the link to that article
 
 print("Number of BTC articles: ",BTC_frq)
 if BTC_frq > 0:
@@ -120,10 +124,11 @@ if BTC_frq > 0:
     print(btc_articles[0]["web_url"])
 print("----------------------------------")
 
-print("Number of ETH articles: ",eth_frq)
-if eth_frq > 0:
-    print("Latest: ",eth_articles[0]["headline"]["main"])
-    print(eth_articles[0]["web_url"])
+print("Number of Cardano articles: ",ada_frq)
+if ada_frq > 0:
+    print("Latest: ",ada_articles[0]["headline"]["main"])
+    print(ada_articles[0]["web_url"])
+
 print("----------------------------------")
 
 print("Number of Doge articles: ",doge_frq)
@@ -133,18 +138,16 @@ if doge_frq > 0:
 
 print("----------------------------------")
 
+print("Number of ETH articles: ",eth_frq)
+if eth_frq > 0:
+    print("Latest: ",eth_articles[0]["headline"]["main"])
+    print(eth_articles[0]["web_url"])
+print("----------------------------------")
+
 print("Number of Ripple articles: ",xrp_frq)
 if xrp_frq > 0:
     print("Latest: ",xrp_articles[0]["headline"]["main"])
     print(xrp_articles[0]["web_url"])
-
-print("----------------------------------")
-
-print("Number of Cardano articles: ",ada_frq)
-if ada_frq > 0:
-    print("Latest: ",ada_articles[0]["headline"]["main"])
-    print(ada_articles[0]["web_url"])
-
 
 ### To dos
 ## Output: a ranking of a set of cryptocurrencies
