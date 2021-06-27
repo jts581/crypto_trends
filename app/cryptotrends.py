@@ -7,6 +7,8 @@ from re import search
 from typing import Counter
 from dotenv import load_dotenv
 from pandas.core.frame import DataFrame
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
 
 load_dotenv()
 
@@ -149,10 +151,94 @@ if xrp_frq > 0:
     print("Latest: ",xrp_articles[0]["headline"]["main"])
     print(xrp_articles[0]["web_url"])
 
+
+## Enable emailed reports
+
+SENDGRID_API_KEY = os.getenv("SENDGRID_API_KEY", default="OOPS, please set env var called 'SENDGRID_API_KEY'")
+SENDGRID_TEMPLATE_ID = os.getenv("SENDGRID_TEMPLATE_ID", default="OOPS, please set env var called 'SENDGRID_TEMPLATE_ID'")
+SENDER_ADDRESS = os.getenv("SENDER_ADDRESS", default="OOPS, please set env var called 'SENDER_ADDRESS'")
+
+## Set variables for Sendgrid Template
+
+if BTC_frq > 0:
+    btc_headline = btc_articles[0]["headline"]["main"]
+    btc_url = btc_articles[0]["web_url"]
+else:
+    btc_headline = "No recent articles available"
+    btc_url = ""
+
+if eth_frq > 0:
+    eth_headline = eth_articles[0]["headline"]["main"]
+    eth_url = eth_articles[0]["web_url"]
+else:
+    eth_headline = "No recent articles available"
+    eth_url = ""
+
+if ada_frq > 0:
+    ada_headline = ada_articles[0]["headline"]["main"]
+    ada_url = ada_articles[0]["web_url"]
+else:
+    ada_headline = "No recent articles available"
+    ada_url = ""
+
+if doge_frq > 0:
+    doge_headline = doge_articles[0]["headline"]["main"]
+    doge_url = doge_articles[0]["web_url"]
+else:
+    doge_headline = "No recent articles available"
+    doge_url = ""
+
+if xrp_frq > 0:
+    xrp_headline = xrp_articles[0]["headline"]["main"]
+    xrp_url = xrp_articles[0]["web_url"]
+else:
+    xrp_headline = "No recent articles available"
+    xrp_url = ""
+
+now = datetime.datetime.now()
+report_time = now.strftime("%m/%d/%y %I:%M:%S %p")        
+
+## Format Sendgrid template - this must match the test data structure
+
+template_data = {
+    "human_friendly_timestamp": "July 26th, 2021 8:00 AM",
+    "btc_frq": BTC_frq,
+    "eth_frq": eth_frq,
+    "ada_frq": ada_frq,
+    "xrp_frq": xrp_frq,
+    "doge_frq": doge_frq,
+    "btc_headline": btc_headline,
+    "eth_headline": eth_headline,
+    "ada_headline": ada_headline,
+    "xrp_headline": xrp_headline,
+    "doge_headline":doge_headline,
+    "btc_url": btc_url,
+    "eth_url": eth_url,
+    "ada_url": ada_url,
+    "xrp_url": xrp_url,
+    "doge_url": doge_url
+}
+
+client = SendGridAPIClient(SENDGRID_API_KEY)
+
+## Validate sendgrid is working
+
+print("CLIENT:", type(client))
+message = Mail(from_email=SENDER_ADDRESS, to_emails=SENDER_ADDRESS)
+message.template_id = SENDGRID_TEMPLATE_ID
+message.dynamic_template_data = template_data
+print("MESSAGE:", type(message))
+try:
+    response = client.send(message)
+    print("RESPONSE:", type(response))
+    print(response.status_code)
+    print(response.body)
+    print(response.headers)
+except Exception as err:
+    print(type(err))
+    print(err)
+
 ### To dos
-## Output: a ranking of a set of cryptocurrencies
-    ## What does that output look like?
 ## Test code (pytest?)
 ## Run through codeclimate
 ## Run it on a remote server (Travis?)
-## Nice to have: emailed report (sendgrid), user inputs email?
