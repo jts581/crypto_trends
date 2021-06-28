@@ -24,10 +24,19 @@ pip install -r requirements.txt
 ```
 
 ## Configuration
+Enter functional... 
+- NYT API Key as NYT_API_KEY
+- Sendgrid API Key as SENDGRID_API_KEY
+- Sendgrid Sender address as SENDER_ADDRESS"
+- Sendgrid Template ID as SENDGRID_TEMPLATE_ID
 
+in the dotenv file
 
 ## Usage
+Running the report:
 
+```sh
+python app/cryptotrends.py
 
 ## Testing
 
