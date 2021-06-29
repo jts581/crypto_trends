@@ -23,6 +23,11 @@ Then, within an active virtual environment, install package dependencies:
 pip install -r requirements.txt
 ```
 
+## Resources
+
+This app uses the NY Times 'Article Search' API
+More information here: https://developer.nytimes.com/docs/articlesearch-product/1/overview 
+
 ## Configuration
 Enter functional... 
 - NYT API Key as NYT_API_KEY
