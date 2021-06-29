@@ -38,6 +38,7 @@ Running the report:
 Enter the below code in terminal:
 ```sh
 python app/cryptotrends.py
+```
 
 User enters the number of historical days of activity they want to view
 
@@ -47,7 +48,7 @@ Running tests:
 
 ```sh
 pytest
-
+```
 ## Codeclimate results
 
 https://codeclimate.com/github/LLC314/freestyle_project/issues
