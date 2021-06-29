@@ -164,7 +164,7 @@ def print_articles():
     if xrp_frq > 0:
         print("Latest: ",xrp_articles[0]["headline"]["main"])
         print(xrp_articles[0]["web_url"])
-        print("----------------------------------")
+    print("----------------------------------")
 
 print_articles()
 
