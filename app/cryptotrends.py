@@ -108,7 +108,7 @@ ada_articles = client.article_search(
 )
 
 ## Print a table of the five cryptocurrencies, ranked by number of mentions
-
+print("")
 print("Cryptocurrency mentions in the NYTimes:",start_date.strftime("%m/%d/%Y"),"through",today.strftime(("%m/%d/%Y")))
 print("----------------------------------")
 
@@ -122,7 +122,7 @@ eth_frq = len(eth_articles)
 
 xrp_frq = len(xrp_articles)
 
-df = pd.DataFrame(data={"Cryptocurrencies": ["Bitcoin","Cardano","Doge","Ethereum","Ripple"],
+df = pd.DataFrame(data={"Cryptocurrencies": ["Bitcoin","Cardano","Dogecoin","Ethereum","Ripple"],
                          "Number of mentions": [BTC_frq,ada_frq,doge_frq,eth_frq,xrp_frq]})
 
 df.sort_values(by= ["Number of mentions"], inplace= True, ascending= False) 
@@ -134,7 +134,7 @@ print("----------------------------------")
 
 def print_articles():
 
-    print("Number of BTC articles: ",BTC_frq)
+    print("Number of Bitcoin articles: ",BTC_frq)
     if BTC_frq > 0:
         print("Latest: ",btc_articles[0]["headline"]["main"])
         print(btc_articles[0]["web_url"])
@@ -147,14 +147,14 @@ def print_articles():
 
     print("----------------------------------")
 
-    print("Number of Doge articles: ",doge_frq)
+    print("Number of Dogecoin articles: ",doge_frq)
     if doge_frq > 0:
         print("Latest: ",doge_articles[0]["headline"]["main"])
         print(doge_articles[0]["web_url"])
 
     print("----------------------------------")
 
-    print("Number of ETH articles: ",eth_frq)
+    print("Number of Ethereum articles: ",eth_frq)
     if eth_frq > 0:
         print("Latest: ",eth_articles[0]["headline"]["main"])
         print(eth_articles[0]["web_url"])
@@ -217,7 +217,8 @@ report_time = now.strftime("%m/%d/%y %I:%M:%S %p")
 ## Format Sendgrid template - this must match the test data structure
 
 template_data = {
-    "human_friendly_timestamp": "July 26th, 2021 8:00 AM",
+    "human_friendly_startstamp": start_date.strftime("%m/%d/%y"),
+    "human_friendly_startstamp": today.strftime("%m/%d/%y"),
     "btc_frq": BTC_frq,
     "eth_frq": eth_frq,
     "ada_frq": ada_frq,
@@ -248,8 +249,8 @@ try:
     response = client.send(message)
     print("RESPONSE:", type(response))
     print(response.status_code)
-    print(response.body)
-    print(response.headers)
+    #print(response.body)
+    #print(response.headers)
 except Exception as err:
     print(type(err))
     print(err)
