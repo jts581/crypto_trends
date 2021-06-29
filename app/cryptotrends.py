@@ -23,18 +23,30 @@ from pynytimes import NYTAPI
 client = NYTAPI(NYT_API_KEY, parse_dates=True)
 client
 
-## Query the API for the five cryptocurrency search terms
+## Allow user to input date range
+while True:
+  try:
+      start_range = int(input("Please enter how many days (1-90) of cryptocurrency trends you'd like to include:"))
+  except ValueError: 
+      print("That's not a number!")
+  else:
+      if 1 <= start_range <= 90: 
+          break
+      else:
+          print("Out of range. Try a number between 1-90")
+
 
 today = datetime.datetime.today()
-week_ago = today - datetime.timedelta(days=7)
+start_date = today - datetime.timedelta(days=start_range)
+#start_date = today - datetime.timedelta(days=7)
 
-print(type(week_ago))
+## Query the API for the five cryptocurrency search terms (max of 100 results per coin)
 
 btc_articles = client.article_search(
     query = "Bitcoin",
     results = 500,
     dates = {
-        "begin": week_ago,
+        "begin": start_date,
         "end": today
     },
     options = {
@@ -47,7 +59,7 @@ eth_articles = client.article_search(
     query = "Ethereum",
     results = 500,
     dates = {
-        "begin": week_ago,
+        "begin": start_date,
         "end": today
     },
     options = {
@@ -60,7 +72,7 @@ doge_articles = client.article_search(
     query = "Dogecoin",
     results = 500,
     dates = {
-        "begin": week_ago,
+        "begin": start_date,
         "end": today
     },
     options = {
@@ -73,7 +85,7 @@ xrp_articles = client.article_search(
     query = "xrp",
     results = 500,
     dates = {
-        "begin": week_ago,
+        "begin": start_date,
         "end": today
     },
     options = {
@@ -86,7 +98,7 @@ ada_articles = client.article_search(
     query = "Cardano",
     results = 500,
     dates = {
-        "begin": week_ago,
+        "begin": start_date,
         "end": today
     },
     options = {
@@ -95,9 +107,9 @@ ada_articles = client.article_search(
     }
 )
 
-## Print a table of the five cryptocurrencies, ranked by number of mentions in the last week
+## Print a table of the five cryptocurrencies, ranked by number of mentions
 
-print("Cryptocurrency mentions in the NYTimes:",week_ago.strftime("%m/%d/%Y"),"through",today.strftime(("%m/%d/%Y")))
+print("Cryptocurrency mentions in the NYTimes:",start_date.strftime("%m/%d/%Y"),"through",today.strftime(("%m/%d/%Y")))
 print("----------------------------------")
 
 BTC_frq = len(btc_articles)
@@ -110,47 +122,51 @@ eth_frq = len(eth_articles)
 
 xrp_frq = len(xrp_articles)
 
-df = pd.DataFrame(data={"Cryptocurrencies": ["Ethereum","Bitcoin","Doge","Ripple","Cardano"],
+df = pd.DataFrame(data={"Cryptocurrencies": ["Bitcoin","Cardano","Doge","Ethereum","Ripple"],
                          "Number of mentions": [BTC_frq,ada_frq,doge_frq,eth_frq,xrp_frq]})
 
-df.sort_values(by= ["Number of mentions"], inplace= True, ascending= False)
+df.sort_values(by= ["Number of mentions"], inplace= True, ascending= False) 
 print(df)
 
 print("----------------------------------")
 
 ## Print the latest article for each cryptocurrency, if one is available, with the link to that article
 
-print("Number of BTC articles: ",BTC_frq)
-if BTC_frq > 0:
-    print("Latest: ",btc_articles[0]["headline"]["main"])
-    print(btc_articles[0]["web_url"])
-print("----------------------------------")
+def print_articles():
 
-print("Number of Cardano articles: ",ada_frq)
-if ada_frq > 0:
-    print("Latest: ",ada_articles[0]["headline"]["main"])
-    print(ada_articles[0]["web_url"])
+    print("Number of BTC articles: ",BTC_frq)
+    if BTC_frq > 0:
+        print("Latest: ",btc_articles[0]["headline"]["main"])
+        print(btc_articles[0]["web_url"])
+    print("----------------------------------")
 
-print("----------------------------------")
+    print("Number of Cardano articles: ",ada_frq)
+    if ada_frq > 0:
+        print("Latest: ",ada_articles[0]["headline"]["main"])
+        print(ada_articles[0]["web_url"])
 
-print("Number of Doge articles: ",doge_frq)
-if doge_frq > 0:
-    print("Latest: ",doge_articles[0]["headline"]["main"])
-    print(doge_articles[0]["web_url"])
+    print("----------------------------------")
 
-print("----------------------------------")
+    print("Number of Doge articles: ",doge_frq)
+    if doge_frq > 0:
+        print("Latest: ",doge_articles[0]["headline"]["main"])
+        print(doge_articles[0]["web_url"])
 
-print("Number of ETH articles: ",eth_frq)
-if eth_frq > 0:
-    print("Latest: ",eth_articles[0]["headline"]["main"])
-    print(eth_articles[0]["web_url"])
-print("----------------------------------")
+    print("----------------------------------")
 
-print("Number of Ripple articles: ",xrp_frq)
-if xrp_frq > 0:
-    print("Latest: ",xrp_articles[0]["headline"]["main"])
-    print(xrp_articles[0]["web_url"])
+    print("Number of ETH articles: ",eth_frq)
+    if eth_frq > 0:
+        print("Latest: ",eth_articles[0]["headline"]["main"])
+        print(eth_articles[0]["web_url"])
+    print("----------------------------------")
 
+    print("Number of Ripple articles: ",xrp_frq)
+    if xrp_frq > 0:
+        print("Latest: ",xrp_articles[0]["headline"]["main"])
+        print(xrp_articles[0]["web_url"])
+        print("----------------------------------")
+
+print_articles()
 
 ## Enable emailed reports
 
@@ -237,8 +253,3 @@ try:
 except Exception as err:
     print(type(err))
     print(err)
-
-### To dos
-## Test code (pytest?)
-## Run through codeclimate
-## Run it on a remote server (Travis?)
